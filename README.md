@@ -2,8 +2,8 @@
 
 ## Setting up the Conda Environment
 
-this only works about half the way through as i havent set up yml file yet. will do soon
-To recreate the Conda environment, follow these steps:
+- this only works about half the way through as i havent set up yml file yet. will do soon
+- To recreate the Conda environment, follow these steps:
 
 1. follow this guide to access caslabs system on vscode https://courses.caslab.queensu.ca/how-to/connect-ssh-sftp-to-caslab-linux-with-visual-studio-code-vs-code/
 2. Clone the repository into your caslabs linux enviroment
