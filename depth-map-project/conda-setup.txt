@@ -1,0 +1,23 @@
+# QMIND-cv-depthmap
+
+## Setting up the Conda Environment
+
+- this only works about half the way through as i havent set up yml file yet. will do soon
+- To recreate the Conda environment, follow these steps:
+
+1. follow this guide to access caslabs system on vscode (can also just shh to server i like this) - https://courses.caslab.queensu.ca/how-to/connect-ssh-sftp-to-caslab-linux-with-visual-studio-code-vs-code/
+2. Clone the repository into your caslabs linux enviroment
+3. enter these commands 
+    $ cd QMIND-CV-Robot-Vision/depth-map-project 
+    $ wget https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh
+    $ bash Anaconda3-5.2.0-Linux-x86_64.sh
+4. install and accept agreement
+5. reset terminal
+6. return to repository and run - conda env create -n QMIND -f environment.yml  
+7. activate your enviroment with - conda activate QMIND
+9. if it says enviroment is not set up for conda activate, follow instructions and reset terminal then try again
+
+now your should be set up to work on the project
+
+
+   
