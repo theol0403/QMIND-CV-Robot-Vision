@@ -176,11 +176,27 @@ class DepthMapModel(tf.keras.Model):
         x = self.conv3(x)
 
         return x
+    
+
+def loss(y_true, y_pred):
+    """
+    Custom loss function.
+
+    Args:
+        y_true: Ground truth tensor of shape (batch_size, height, width, 1).
+        y_pred: Predicted tensor of shape (batch_size, height, width, 1).
+
+    Returns:
+        Loss value.
+
+    """
+    
+    return tf.keras.losses.mean_squared_error(y_true, y_pred)
 
 
 model = DepthMapModel()
 
-model.compile(optimizer='adam', loss='mean_squared_error')
+model.compile(optimizer='adam', loss=loss)
 
 custom_data_generator = CustomDataGenerator(splits=split, scene_types=scene_type, meta_fname=meta_fname, data_root=data_root, batch_size=batch_size)
 
