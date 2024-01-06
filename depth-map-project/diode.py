@@ -81,8 +81,8 @@ def plot_normal_map(normal_map):
     plt.axis('off')
     plt.imshow(normal_viz)
 
-    
-    
+
+
 class DIODE(Dataset):
     def __init__(self, meta_fname, data_root, splits, scene_types):
         self.data_root = data_root
