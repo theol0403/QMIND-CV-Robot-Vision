@@ -152,13 +152,8 @@ class DepthMapModel(tf.keras.Model):
     def __init__(self):
         super(DepthMapModel, self).__init__()
 
-        # Insert class layers here
-        self.conv1 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=(dim[0], dim[1], 3))
-        self.maxpool1 = tf.keras.layers.MaxPooling2D((2, 2))
-        self.conv2 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same')
-        self.upsample1 = tf.keras.layers.UpSampling2D((2, 2))
-        self.conv3 = tf.keras.layers.Conv2D(1, (3, 3), activation='linear', padding='same')  # Output layer for depth map
-    
+        pass
+
     def call(self, inputs):
         """
         Forward pass of the model.
@@ -169,18 +164,30 @@ class DepthMapModel(tf.keras.Model):
         Returns:
             Output tensor of shape (batch_size, height, width, 1) representing the depth map.
         """
-        x = self.conv1(inputs)
-        x = self.maxpool1(x)
-        x = self.conv2(x)
-        x = self.upsample1(x)
-        x = self.conv3(x)
+        pass 
 
         return x
+    
+
+def loss(y_true, y_pred):
+    """
+    Custom loss function.
+
+    Args:
+        y_true: Ground truth tensor of shape (batch_size, height, width, 1).
+        y_pred: Predicted tensor of shape (batch_size, height, width, 1).
+
+    Returns:
+        Loss value.
+
+    """
+    
+    return tf.keras.losses.mean_squared_error(y_true, y_pred)
 
 
 model = DepthMapModel()
 
-model.compile(optimizer='adam', loss='mean_squared_error')
+model.compile(optimizer='adam', loss=loss)
 
 custom_data_generator = CustomDataGenerator(splits=split, scene_types=scene_type, meta_fname=meta_fname, data_root=data_root, batch_size=batch_size)
 
