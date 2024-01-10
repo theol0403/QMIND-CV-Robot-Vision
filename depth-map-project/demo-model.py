@@ -4,14 +4,20 @@ import os
 # Third party imports
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.utils import Sequence
 import cv2
 
 
+# Check if GPU is available
+if tf.test.is_gpu_available():
+    print("GPU is available")
+else:
+    print("GPU is not available")
+
+
 # Local application imports
-from diode import DIODE, plot_depth_map
+from diode import DIODE
 
 # Constants
 annotation_folder = "/val/"
@@ -31,8 +37,8 @@ if not os.path.exists(os.path.abspath(".") + annotation_folder):
     )
 
 #define hyperparameters
-batch_size = 6
-epochs = 1
+batch_size = 10
+epochs = 8
 learning_rate = 0.001
 dim = (256, 256)
 

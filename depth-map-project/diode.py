@@ -83,7 +83,14 @@ def plot_normal_map(normal_map):
 
 
 
-class DIODE(Dataset):
+import tensorflow as tf
+import os
+import numpy as np
+from PIL import Image
+
+
+class DIODE:
+
     def __init__(self, meta_fname, data_root, splits, scene_types):
         self.data_root = data_root
         self.splits = check_and_tuplize_tokens(
@@ -99,20 +106,30 @@ class DIODE(Dataset):
         for split in self.splits:
             for scene_type in self.scene_types:
                 _curr = enumerate_paths(self.meta[split][scene_type])
-                _curr = map(lambda x: osp.join(split, scene_type, x), _curr)
+                _curr = map(lambda x: os.path.join(split, scene_type, x), _curr)
                 imgs.extend(list(_curr))
         self.imgs = imgs
 
-    def __len__(self):
-        return len(self.imgs)
+    def _load_image(self, path):
+        return np.array(Image.open(path))
 
-    def __getitem__(self, index):
-        im = self.imgs[index]
-        im_fname = osp.join(self.data_root, '{}.png'.format(im))
-        de_fname = osp.join(self.data_root, '{}_depth.npy'.format(im))
-        de_mask_fname = osp.join(self.data_root, '{}_depth_mask.npy'.format(im))
+    def _load_data(self, path):
+        return np.load(path).squeeze()
 
-        im = np.array(Image.open(osp.join(self.data_root, im_fname)))
-        de = np.load(de_fname).squeeze()
-        de_mask = np.load(de_mask_fname)
-        return im, de, de_mask
+    def _generator(self):
+        for im in self.imgs:
+            im_fname = os.path.join(self.data_root, '{}.png'.format(im))
+            de_fname = os.path.join(self.data_root, '{}_depth.npy'.format(im))
+            de_mask_fname = os.path.join(self.data_root, '{}_depth_mask.npy'.format(im))
+
+            yield self._load_image(im_fname), self._load_data(de_fname), self._load_data(de_mask_fname)
+
+    def get_dataset(self):
+        return tf.data.Dataset.from_generator(
+            self._generator,
+            output_signature=(
+                tf.TensorSpec(shape=(None, None, None), dtype=tf.float32),
+                tf.TensorSpec(shape=(None, None), dtype=tf.float32),
+                tf.TensorSpec(shape=(None, None), dtype=tf.bool)
+            )
+        )
