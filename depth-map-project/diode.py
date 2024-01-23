@@ -2,28 +2,13 @@ import os.path as osp
 from itertools import chain
 import json
 
-from torch.utils.data import Dataset
 import numpy as np
 from PIL import Image
 
 import matplotlib.pyplot as plt
 
-'''
-The json metadata for DIODE is laid out as follows:
-train:
-    outdoor:
-        scene_000xx:
-            scan_00yyy:
-                - 000xx_00yyy_indoors_300_010
-                - 000xx_00yyy_indoors_300_020
-                - 000xx_00yyy_indoors_300_030
-        scene_000kk:
-            _analogous_
-val:
-    _analogous_
-test:
-    _analogous_
-'''
+import tensorflow as tf
+
 
 _VALID_SPLITS = ('train', 'val', 'test')
 _VALID_SCENE_TYPES = ('indoors', 'outdoor')
@@ -55,38 +40,6 @@ def enumerate_paths(src):
         return list(chain.from_iterable(acc))
     else:
         raise ValueError('do not accept data type {}'.format(type(src)))
-
-
-def plot_depth_map(dm, validity_mask):
-    validity_mask = validity_mask > 0
-    MIN_DEPTH = 0.5
-    MAX_DEPTH = min(300, np.percentile(dm, 99))
-    dm = np.clip(dm, MIN_DEPTH, MAX_DEPTH)
-    dm = np.log(dm, where=validity_mask)
-
-    dm = np.ma.masked_where(~validity_mask, dm)
-
-    cmap = plt.cm.jet
-    cmap.set_bad(color='black')
-    plt.imshow(dm, cmap=cmap, vmax=np.log(MAX_DEPTH))
-
-
-def plot_normal_map(normal_map):
-    normal_viz = normal_map[:, ::, :]
-
-    normal_viz = normal_viz + np.equal(np.sum(normal_viz, 2, 
-    keepdims=True), 0.).astype(np.float32)*np.min(normal_viz)
-
-    normal_viz = (normal_viz - np.min(normal_viz))/2.
-    plt.axis('off')
-    plt.imshow(normal_viz)
-
-
-
-import tensorflow as tf
-import os
-import numpy as np
-from PIL import Image
 
 
 class DIODE:
@@ -133,3 +86,14 @@ class DIODE:
                 tf.TensorSpec(shape=(None, None), dtype=tf.bool)
             )
         )
+    def __getitem__(self, index):
+        if index < 0 or index >= len(self.imgs):
+            raise IndexError('Index out of range')
+        im = self.imgs[index]
+        im_fname = os.path.join(self.data_root, '{}.png'.format(im))
+        de_fname = os.path.join(self.data_root, '{}_depth.npy'.format(im))
+        de_mask_fname = os.path.join(self.data_root, '{}_depth_mask.npy'.format(im))
+        return self._load_image(im_fname), self._load_data(de_fname), self._load_data(de_mask_fname)
+
+    def __len__(self):
+        return len(self.imgs)
