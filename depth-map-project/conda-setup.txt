@@ -20,3 +20,19 @@ now your should be set up to work on the project
 
 
    
+new 
+
+- Clone the repository into a  linux system
+- enter these commands 
+    $ cd QMIND-CV-Robot-Vision/depth-map-project 
+    $ wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+    $ bash Anaconda3-2022.05-Linux-x86_64.sh
+
+- install and accept agreement
+- reset terminal
+- return to repository and run - conda env create -n QMIND -f environment.yml  
+- activate your enviroment with - conda activate QMIND
+- if it says enviroment is not set up for conda activate, follow instructions and reset terminal then try again
+
+- the demo code and base code there is a varible called data_root. this must be changed to your machines folder. use commmand pwd to check the path to the folder with the model and switch them.
+
