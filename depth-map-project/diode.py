@@ -1,6 +1,7 @@
 import os.path as osp
 from itertools import chain
 import json
+import os
 
 import numpy as np
 from PIL import Image
