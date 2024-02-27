@@ -2,12 +2,8 @@ import os.path as osp
 from itertools import chain
 import json
 import os
-
 import numpy as np
 from PIL import Image
-
-import matplotlib.pyplot as plt
-
 import tensorflow as tf
 
 
