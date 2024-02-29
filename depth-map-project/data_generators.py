@@ -69,7 +69,8 @@ class DiodeDataGenerator(Sequence):
             x, y, mask = self.load(i)
 
             flip = np.random.rand() > 0.5
-            x = self.pre_process_image(x, flip)
+            color_swap = np.random.rand() > 0.5
+            x = self.pre_process_image(x, flip, color_swap)
             y = self.pre_process_depth(y, mask, flip)
 
             x_batch.append(x)
@@ -81,9 +82,10 @@ class DiodeDataGenerator(Sequence):
         return x_batch, y_batch
     
 
-    def pre_process_image(self, x, flip):
+    def pre_process_image(self, x, flip=False, color_swap=True):
         x = cv2.resize(x, self.dim[:2])
-        x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
+        if color_swap:
+            x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
         x = x / 255.0
         if flip:
             x = np.fliplr(x)
@@ -162,7 +164,8 @@ class RsDataGenerator(Sequence):
             x, y = self.load(i)
 
             flip = np.random.rand() > 0.5
-            x = self.pre_process_image(x, flip)
+            color_swap = np.random.rand() > 0.5 
+            x = self.pre_process_image(x, flip, color_swap)
             y = self.pre_process_depth(y, flip)
             x_batch.append(x)
             y_batch.append(y)
@@ -193,9 +196,10 @@ class RsDataGenerator(Sequence):
         return np.array(image), depth
 
     
-    def pre_process_image(self, x, flip):
+    def pre_process_image(self, x, flip=False, color_swap=True):
         x = cv2.resize(x, self.dim[:2])
-        x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
+        if color_swap:
+            x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
         x = x / 255.0
         if flip:
             x = np.fliplr(x)
