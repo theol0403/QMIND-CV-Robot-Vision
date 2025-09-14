@@ -8,6 +8,7 @@ import threading
 import numpy as np
 from ultralytics import YOLO
 
+
 class Camera:
     def __init__(self, src=0):
         self.cap = cv2.VideoCapture(src)
@@ -114,7 +115,7 @@ def run_yolo(model, old_image, image):
 
 model = tf.keras.models.load_model('QMIND_depth_model', custom_objects={'loss_function': loss_function})
 
-droidcam_url = "http://192.168.2.34:4747/video"
+droidcam_url = "http://192.168.2.10:4747/video"
 cam = Camera(droidcam_url)
 cam.start()
 yolo_model = load_yolo()
@@ -132,13 +133,13 @@ while True:
         depth = (depth * 255).astype(np.uint8)
         depth = cv2.applyColorMap(depth, cv2.COLORMAP_JET)      
 
-        frame = cv2.resize(frame, (500,500))
-        depth = cv2.resize(depth, (500,500))
+        frame = cv2.resize(frame, (600,500))
+        depth = cv2.resize(depth, (600,500))
         yolo_results = run_yolo(yolo_model, frame, depth)
 
         cv2.imshow('Webcam Feed', frame)
         cv2.imshow('Depth Map', depth)
-        cv2.imshow('YOLO Results', yolo_results)
+        cv2.imshow('YOLO Overlaid', yolo_results)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

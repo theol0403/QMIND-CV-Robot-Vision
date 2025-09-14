@@ -56,7 +56,7 @@ def pre_process_image(x):
     x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
     x = x / 255.0
     x = tf.image.convert_image_dtype(x, tf.float32)
-    
+
     return x
 
 droidcam_url = "http://192.168.2.34:4747/video"
@@ -72,7 +72,7 @@ while True:
 
         depth = model.predict(frame, verbose=0)
         depth = np.squeeze(depth)
-        depth = cv2.resize(depth, (640, 480))
+        depth = cv2.resize(depth, (1000,800))
         depth_scaled = (depth * 255).astype(np.uint8)
         depth_colored = cv2.applyColorMap(depth_scaled, cv2.COLORMAP_JET)
 
